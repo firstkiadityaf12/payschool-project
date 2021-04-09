@@ -6,10 +6,10 @@ import { MdKeyboardArrowRight } from 'react-icons/md'
 //css
 const Section = styled.section`
     background-image: url(${BgImg});
-    height: 760px;
+    height: 785px;
     display: block;
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: cover;
 `
 const Content = styled.div`
     width: 100%;
