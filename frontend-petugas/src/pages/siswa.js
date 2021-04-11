@@ -392,7 +392,7 @@ export default class Siswa extends Component {
           <div className="container">
             <h3 className="text-bold text-info mt-2">Siswa List</h3>
             <table className="table table-bordered">
-              <thead>
+              <thead className="bg-info">
                 <tr>
                   <td>#</td>
                   <td>NISN</td>

@@ -114,7 +114,7 @@ export default class Spp extends React.Component{
                <div className="container">
                     <h3 className="text-bold text-info mt-2">SPP</h3>
                     <table className="table table-bordered">
-                        <thead>
+                        <thead className="bg-info">
                             <tr>
                                 <th>ID SPP</th>
                                 <th>TAHUN</th>
@@ -153,13 +153,43 @@ export default class Spp extends React.Component{
                                 </div>
                                 <div className="modal-body">
                                     <form onSubmit={ev => this.saveSpp(ev)}>
-                                        
+                                        ID SPP
+                                        {this.state.action === 'update' ? (
+                                            <input type="number" className="form-control mb-1"
+                                                value={this.state.id_spp}
+                                                onChange={ev => this.setState({ id_spp: ev.target.value})}
+                                                disabled
+                                            />
+                                        ):(null)}
+                                        {this.state.action === "insert" ? (
+                                            <input type="number" className="form-control mb-1"
+                                            value={this.state.id_spp}
+                                            onChange={ev => this.setState({ id_spp: ev.target.value})}
+                                            required
+                                        />
+                                        ):(null)}
+                                        TAHUN
+                                        <input type="number" className="form-control mb-1"
+                                            value={this.state.tahun}
+                                            onChange={ev => this.setState({ tahun: ev.target.value})}
+                                            required
+                                        />
+                                        NOMINAL
+                                        <input type="number" className="from-control mb-1"
+                                            value={this.state.nominal}
+                                            onChange={ev => this.setState({ nominal: ev.target.nominal})}
+                                            required
+                                        />
+                                        <button type="submit" className="btn btn-block btn-success">
+                                            Simpan
+                                        </button>
                                     </form>
                                 </div>
                             </div>
                         </div>          
                     </div>
                </div>
+
             </div>
         )
     }
