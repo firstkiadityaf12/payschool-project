@@ -2,6 +2,7 @@ import React from "react"
 import Navbar from "../component/Navbar"
 import { base_url } from "../config"
 import axios from "axios"
+import $ from "jquery"
 
 export default class Kelas extends React.Component{
     constructor(){
@@ -19,6 +20,7 @@ export default class Kelas extends React.Component{
         } else {
             window.location = "/login"
         }
+        this.headerConfig.bind(this)
     }
 
     //headerconfig
@@ -51,7 +53,7 @@ export default class Kelas extends React.Component{
 
     //componentdidmount
     componentDidMount(){
-        this.getKelas
+        this.getKelas()
     }
 
     //add
@@ -65,14 +67,56 @@ export default class Kelas extends React.Component{
         })
     }
 
+    //edit
     Edit = selectionItem => {
-        $("modal_kelas").modal(show)
+        $("modal_kelas").modal("show")
         this.setState({
             action: "update",
             id_kelas: selectionItem.id_kelas,
             nama_kelas: selectionItem.nama_kelas,
             kompetensi_keahlian: selectionItem.kompetensi_keahlian
         })
+    }
+
+    //save kelas
+    saveKelas = event => {
+        event.preventDefault()
+        $("#modal_kelas").modal("hide")
+        let data = {
+            "id_kelas" : this.state.id_kelas,
+            "nama_kelas" : this.state.nama_kelas,
+            "kompetensi_keahlian" : this.state.kompetensi_keahlian
+        }
+
+        let url = base_url + "/kelas"
+        if (this.state.action === "insert") {
+            axios.post(url, data, this.headerConfig())
+            .then(response => {
+                window.alert(response.data.message)
+                this.getKelas()
+            })
+            .catch(error => console.log(error))
+        } else if(this.state.action === "update"){
+            axios.put(url, data, this.headerConfig())
+            .then(response => {
+                window.alert(response.data.message)
+                this.getKelas()
+            })
+            .catch(error => console.log(error))
+        }
+    }
+
+    //drop kelas
+    dropKelas = selectionItem => {
+        if (window.confirm("are you sure delete this data?")) {
+            let url = base_url + "/kelas/" + selectionItem.id_kelas
+            axios.delete(url, this.headerConfig())
+            .then(response => {
+                window.alert(response.data.message)
+                this.getKelas()
+            })
+            .catch(error => console.log(error))
+        }
     }
     
     render(){
@@ -97,10 +141,10 @@ export default class Kelas extends React.Component{
                                     <td>{item.nama_kelas}</td>
                                     <td>{item.kompetensi_keahlian}</td>
                                     <td>
-                                        <button className="btn btn-sm btn-warning m-1">
+                                        <button className="btn btn-sm btn-warning m-1" onClick={() => this.Edit(item)}>
                                             Edit
                                         </button>
-                                        <button className="btn btn-sm btn-danger m-1">
+                                        <button className="btn btn-sm btn-danger m-1" onClick={() => this.dropKelas(item)}>
                                             Hapus
                                         </button>
                                     </td>
@@ -108,9 +152,53 @@ export default class Kelas extends React.Component{
                             )}
                         </tbody>
                     </table>
-                    <button className="btn btn-success">
+                    <button className="btn btn-success" onClick={() => this.Add()}>
                         Tambah Kelas
                     </button>
+
+                    {/** modal kelas */}
+                    <div className="modal fade" id="modal_kelas">
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header bg-info text-white">
+                                    <h4>Form KELAS</h4>
+                                </div>
+                                <div className="modal-body">
+                                    <form onSubmit={ev => this.saveKelas(ev)}>
+                                    ID KELAS
+                                    {this.state.action === 'update' ? (
+                                        <input type="number" className="form-control mb-1"
+                                            value={this.state.id_kelas}
+                                            onChange={ev => this.setState({id_kelas: ev.target.value})}
+                                            disabled
+                                        />
+                                    ):(null)}
+                                    {this.state.action === 'insert' ? (
+                                        <input type="number" className="form-control mb-1" 
+                                        value={this.state.id_kelas}
+                                        onChange = {ev => this.setState({id_kelas: ev.target.value})}
+                                        required
+                                        />
+                                    ):(null)}
+                                    NAMA KELAS
+                                    <input type="text" className="form-control mb-1"
+                                        value={this.state.nama_kelas}
+                                        onChange={ev => this.setState({nama_kelas: ev.target.value})}
+                                        required
+                                    />
+                                    KOMPETENSI KEAHLIAN
+                                    <input type="text" className="form-control mb-1"
+                                        value={this.state.kompetensi_keahlian}
+                                        onChange={ev => this.setState({kompetensi_keahlian: ev.target.value})}
+                                    />
+                                    <button type="submit" className="btn btn-block btn-success">
+                                        Simpan
+                                    </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         )

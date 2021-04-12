@@ -20,7 +20,7 @@ export default class Spp extends React.Component{
         } else {
             window.location = "/login"
         }
-        
+        this.headerConfig.bind(this)
     }
 
     headerConfig = () => {
